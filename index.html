@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Квесты по информатике — два режима</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(circle at 10% 20%, #0f1a2b, #03080f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #f0f6ff;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(18, 30, 48, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 56px;
+            padding: 34px 32px 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: 0.25s ease;
+        }
+
+        /* Шапка */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .logo-icon {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #e0edff, #a5c9ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .mode-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #b8d4ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mode-badge i { color: #fbbf24; }
+
+        /* Главная страница */
+        #mainPage {
+            display: block;
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #eaf2ff;
+            letter-spacing: -0.3px;
+        }
+        .sub-title {
+            text-align: center;
+            color: #8eb4e6;
+            font-size: 1rem;
+            margin-bottom: 36px;
+            opacity: 0.8;
+        }
+
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .mode-card {
+            background: rgba(12, 24, 40, 0.5);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 32px 24px 28px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            transition: 0.25s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .mode-card:hover {
+            transform: translateY(-6px);
+            border-color: #3b82f666;
+            background: rgba(30, 58, 95, 0.4);
+            box-shadow: 0 16px 36px rgba(0, 30, 80, 0.4);
+        }
+        .mode-card .mode-icon {
+            font-size: 3rem;
+            line-height: 1;
+        }
+        .mode-card .mode-name {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #e6f0ff;
+        }
+        .mode-card .mode-desc {
+            font-size: 0.95rem;
+            color: #9ab9e6;
+            line-height: 1.5;
+        }
+        .mode-card .mode-tag {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 18px;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            color: #b3cef5;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-top: 4px;
+        }
+        .mode-card .mode-stats {
+            font-size: 0.8rem;
+            color: #7ca1d0;
+        }
+
+        /* Кнопка назад */
+        .back-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .btn-back {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #b8d4ff;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.15s;
+            backdrop-filter: blur(4px);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Блок режима (скрыт) */
+        .mode-section {
+            display: none;
+        }
+        .mode-section.visible {
+            display: block;
+        }
+
+        /* Прогресс (общий для обоих режимов) */
+        .progress-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 40px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .progress-stats {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #c8dfff;
+        }
+        .progress-stats span i { margin-right: 8px; }
+        .progress-bar-wrap {
+            flex: 1;
+            min-width: 100px;
+            height: 8px;
+            background: #1e3349;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 12px;
+            transition: width 0.35s ease;
+        }
+        .progress-bar-fill.blue { background: linear-gradient(90deg, #3b82f6, #8b5cf6); box-shadow: 0 0 20px #3b82f677; }
+        .progress-bar-fill.gold { background: linear-gradient(90deg, #f59e0b, #ef4444); box-shadow: 0 0 20px #f59e0b77; }
+
+        /* Карточка квеста (универсальная) */
+        .quest-card {
+            background: rgba(12, 24, 40, 0.5);
+            backdrop-filter: blur(6px);
+            border-radius: 40px;
+            padding: 32px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6);
+            margin-bottom: 24px;
+        }
+
+        .quest-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .quest-number {
+            background: #1d3b5c;
+            padding: 4px 18px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #b4d6ff;
+            border: 1px solid #2f5580;
+        }
+        .quest-type {
+            padding: 4px 16px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .quest-type.levels { background: rgba(59, 130, 246, 0.15); color: #93bbfc; border-color: rgba(59, 130, 246, 0.15); }
+        .quest-type.logic { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border-color: rgba(245, 158, 11, 0.15); }
+
+        .quest-title {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #ecf5ff;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .quest-desc {
+            font-size: 1.15rem;
+            color: #cde0fa;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .quest-hint {
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px dashed rgba(245, 158, 11, 0.15);
+            border-radius: 20px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            color: #fcd34d;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .quest-hint i { color: #fbbf24; font-size: 1.2rem; }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+        .option-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 60px;
+            padding: 16px 24px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: 0.15s ease;
+            backdrop-filter: blur(2px);
+            color: #dfecff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .option-item:hover:not(.disabled-opt) {
+            transform: scale(1.01);
+        }
+        .option-item:hover:not(.disabled-opt).mode-levels {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: #3b82f666;
+        }
+        .option-item:hover:not(.disabled-opt).mode-logic {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: #f59e0b66;
+        }
+        .option-item .opt-letter {
+            font-weight: 700;
+            border-radius: 40px;
+            padding: 0 14px;
+            line-height: 2.2;
+            min-width: 36px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .option-item .opt-letter.blue { color: #8bb9fe; background: rgba(0, 40, 80, 0.2); }
+        .option-item .opt-letter.gold { color: #fbbf24; background: rgba(0, 40, 80, 0.2); }
+
+        .option-item.selected.mode-levels { background: rgba(59, 130, 246, 0.18); border-color: #3b82f6; box-shadow: 0 0 0 2px #3b82f644; }
+        .option-item.selected.mode-logic { background: rgba(245, 158, 11, 0.15); border-color: #f59e0b; box-shadow: 0 0 0 2px #f59e0b44; }
+        .option-item.correct { background: rgba(52, 211, 153, 0.12); border-color: #34d399; box-shadow: 0 0 0 2px #34d39955; }
+        .option-item.wrong { background: rgba(248, 113, 113, 0.12); border-color: #f87171; box-shadow: 0 0 0 2px #f8717155; }
+        .option-item.disabled-opt { cursor: default; opacity: 0.7; }
+
+        .feedback-area {
+            margin-top: 6px;
+            padding: 18px 24px;
+            border-radius: 40px;
+            background: rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #3b82f6;
+            color: #c8ddff;
+            font-weight: 500;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: 0.2s;
+        }
+        .feedback-area.success { border-left-color: #34d399; color: #b6f0d4; background: rgba(52, 211, 153, 0.06); }
+        .feedback-area.error { border-left-color: #f87171; color: #fccccc; background: rgba(248, 113, 113, 0.06); }
+        .feedback-area i { font-size: 1.3rem; width: 30px; }
+
+        .nav-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-btn {
+            background: rgba(30, 58, 95, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: #d6eaff;
+            padding: 14px 30px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            backdrop-filter: blur(4px);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1 1 auto;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .nav-btn:hover:not(:disabled) { transform: scale(1.02); }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+        .nav-btn.primary-blue {
+            background: #2563eb;
+            border-color: #3b82f6;
+            color: #fff;
+            box-shadow: 0 6px 18px #2563eb44;
+        }
+        .nav-btn.primary-blue:hover:not(:disabled) { background: #3b82f6; border-color: #60a5fa; }
+        .nav-btn.primary-gold {
+            background: #d97706;
+            border-color: #f59e0b;
+            color: #fff;
+            box-shadow: 0 6px 18px #d9770644;
+        }
+        .nav-btn.primary-gold:hover:not(:disabled) { background: #f59e0b; border-color: #fbbf24; }
+        .nav-btn.reset-btn {
+            background: rgba(180, 60, 60, 0.12);
+            border-color: rgba(255, 100, 100, 0.08);
+            color: #fca5a5;
+            flex: 0.5;
+        }
+        .nav-btn.reset-btn:hover:not(:disabled) { background: rgba(200, 70, 70, 0.2); border-color: #f87171aa; }
+
+        .footer-note {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #4f74a0;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            padding-top: 22px;
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .footer-note span i { margin-right: 6px; }
+
+        @media (max-width: 600px) {
+            .app-container { padding: 20px 16px; }
+            .logo-text { font-size: 1.6rem; }
+            .main-title { font-size: 1.6rem; }
+            .quest-title { font-size: 1.5rem; }
+            .quest-desc { font-size: 1rem; }
+            .option-item { padding: 14px 18px; font-size: 0.95rem; }
+            .nav-btn { padding: 12px 18px; font-size: 0.9rem; }
+            .modes-grid { grid-template-columns: 1fr; }
+            .progress-stats { gap: 12px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="app">
+    <!-- Шапка -->
+    <div class="header">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fas fa-microchip"></i></div>
+            <span class="logo-text">Квест<i>Инфо</i></span>
+        </div>
+        <div class="mode-badge" id="globalModeBadge">
+            <i class="fas fa-home"></i> Главная
+        </div>
+    </div>
+
+    <!-- ===== ГЛАВНАЯ СТРАНИЦА ===== -->
+    <div id="mainPage">
+        <div class="main-title">🧩 Выберите режим игры</div>
+        <div class="sub-title">Два способа проверить свои знания по информатике</div>
+
+        <div class="modes-grid">
+            <div class="mode-card" data-mode="levels">
+                <div class="mode-icon">📚</div>
+                <div class="mode-name">Уровни сложности</div>
+                <div class="mode-desc">5 уровней от «Новичок» до «Эксперт»<br />По 10 вопросов в каждом</div>
+                <div class="mode-tag"><i class="fas fa-layer-group"></i> 50 вопросов</div>
+                <div class="mode-stats"><i class="fas fa-star"></i> Прокачивай знания</div>
+            </div>
+            <div class="mode-card" data-mode="logic">
+                <div class="mode-icon">🧩</div>
+                <div class="mode-name">Логический квест</div>
+                <div class="mode-desc">10 задач на логику,<br />последовательности и рассуждения</div>
+                <div class="mode-tag"><i class="fas fa-brain"></i> Тренируй мышление</div>
+                <div class="mode-stats"><i class="fas fa-fire"></i> Без подсказок</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== РЕЖИМ: УРОВНИ СЛОЖНОСТИ ===== -->
+    <div class="mode-section" id="levelsMode">
+        <div class="back-row">
+            <button class="btn-back" id="backFromLevels"><i class="fas fa-arrow-left"></i> На главную</button>
+        </div>
+        <!-- Прогресс -->
+        <div class="progress-panel">
+            <div class="progress-stats">
+                <span><i class="fas fa-tasks"></i> <span id="levelsCounter">1 / 10</span></span>
+                <span><i class="fas fa-star"></i> <span id="levelsScore">0</span></span>
+                <span><i class="fas fa-layer-group"></i> <span id="levelsLevelName">Новичок</span></span>
+            </div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar-fill blue" id="levelsProgressFill" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <div class="quest-card">
+            <div class="quest-meta">
+                <span class="quest-number" id="levelsNumber">#1</span>
+                <span class="quest-type levels" id="levelsType"><i class="fas fa-layer-group"></i> Уровень 1</span>
+            </div>
+            <div class="quest-title" id="levelsTitle">Загрузка...</div>
+            <div class="quest-desc" id="levelsDesc">Текст задания</div>
+            <div class="options-grid" id="levelsOptions"></div>
+            <div class="feedback-area" id="levelsFeedback"><i class="fas fa-lightbulb"></i> Выберите вариант</div>
+        </div>
+
+        <div class="nav-row">
+            <button class="nav-btn" id="levelsPrev" disabled><i class="fas fa-arrow-left"></i> Назад</button>
+            <button class="nav-btn primary-blue" id="levelsNext">Вперёд <i class="fas fa-arrow-right"></i></button>
+            <button class="nav-btn reset-btn" id="levelsReset"><i class="fas fa-undo-alt"></i> Сброс</button>
+        </div>
+    </div>
+
+    <!-- ===== РЕЖИМ: ЛОГИЧЕСКИЙ КВЕСТ ===== -->
+    <div class="mode-section" id="logicMode">
+        <div class="back-row">
+            <button class="btn-back" id="backFromLogic"><i class="fas fa-arrow-left"></i> На главную</button>
+        </div>
+        <!-- Прогресс -->
+        <div class="progress-panel">
+            <div class="progress-stats">
+                <span><i class="fas fa-tasks"></i> <span id="logicCounter">1 / 10</span></span>
+                <span><i class="fas fa-star"></i> <span id="logicScore">0</span></span>
+                <span><i class="fas fa-brain"></i> Логика</span>
+            </div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar-fill gold" id="logicProgressFill" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <div class="quest-card">
+            <div class="quest-meta">
+                <span class="quest-number" id="logicNumber">#1</span>
+                <span class="quest-type logic" id="logicType"><i class="fas fa-puzzle-piece"></i> Логика</span>
+            </div>
+            <div class="quest-title" id="logicTitle">Загрузка...</div>
+            <div class="quest-desc" id="logicDesc">Текст задания</div>
+            <div class="quest-hint" id="logicHint"><i class="fas fa-lightbulb"></i> <span>Подсказка</span></div>
+            <div class="options-grid" id="logicOptions"></div>
+            <div class="feedback-area" id="logicFeedback"><i class="fas fa-lightbulb"></i> Выберите вариант</div>
+        </div>
+
+        <div class="nav-row">
+            <button class="nav-btn" id="logicPrev" disabled><i class="fas fa-arrow-left"></i> Назад</button>
+            <button class="nav-btn primary-gold" id="logicNext">Вперёд <i class="fas fa-arrow-right"></i></button>
+            <button class="nav-btn reset-btn" id="logicReset"><i class="fas fa-undo-alt"></i> Сброс</button>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        <span><i class="fas fa-cpu"></i> Два режима · 60+ вопросов</span>
+        <span><i class="fas fa-clock"></i> Без ограничений</span>
+        <span><i class="fas fa-crown"></i> Достигай максимума</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ============================================================
+        //  ДАННЫЕ
+        // ============================================================
+
+        // ----- УРОВНИ СЛОЖНОСТИ (5 уровней по 10 вопросов) -----
+        const levelsData = [
+            {
+                id: 'novice',
+                name: 'Новичок',
+                icon: '🌱',
+                quests: [
+                    { title: 'Бит — это...', description: 'Что такое бит?', options: ['Единица информации', 'Часть байта', 'Скорость', 'Тип данных'], correct: 0 },
+                    { title: 'Байт состоит из...', description: 'Сколько бит в байте?', options: ['4', '8', '16', '32'], correct: 1 },
+                    { title: 'Двоичная система', description: 'Какое число в двоичной системе равно 5?', options: ['101', '110', '100', '111'], correct: 0 },
+                    { title: 'Логическое И', description: '1 И 0 = ?', options: ['1', '0', 'Ошибка', 'Не определено'], correct: 1 },
+                    { title: 'Алгоритм', description: 'Что такое алгоритм?', options: ['Последовательность действий', 'Программа', 'Язык', 'Команда'], correct: 0 },
+                    { title: 'Кодирование', description: 'ASCII — это...', options: ['Код символов', 'Файл', 'Папка', 'Драйвер'], correct: 0 },
+                    { title: 'Система счисления', description: 'Основание десятичной системы?', options: ['2', '8', '10', '16'], correct: 2 },
+                    { title: 'Информация', description: 'Что хранит файл?', options: ['Информацию', 'Программу', 'Данные', 'Всё выше'], correct: 3 },
+                    { title: 'Устройство ввода', description: 'Что относится к устройствам ввода?', options: ['Клавиатура', 'Монитор', 'Принтер', 'Колонки'], correct: 0 },
+                    { title: 'URL', description: 'Что такое URL?', options: ['Адрес страницы', 'Протокол', 'Язык', 'Браузер'], correct: 0 }
+                ]
+            },
+            {
+                id: 'student',
+                name: 'Ученик',
+                icon: '📚',
+                quests: [
+                    { title: 'ОЗУ', description: 'Для чего нужна оперативная память?', options: ['Хранение данных', 'Выполнение программ', 'Долговременное хранение', 'Ввод данных'], correct: 1 },
+                    { title: 'HTTP', description: 'Что означает HTTP?', options: ['Протокол передачи', 'Язык разметки', 'Тип файла', 'Сеть'], correct: 0 },
+                    { title: 'Условие if', description: 'Какая конструкция ветвления?', options: ['if', 'for', 'while', 'switch'], correct: 0 },
+                    { title: 'Шифрование', description: 'Зачем шифруют данные?', options: ['Для защиты', 'Для сжатия', 'Для ускорения', 'Для копирования'], correct: 0 },
+                    { title: 'Нейросети', description: 'Где применяются нейросети?', options: ['Распознавание', 'Калькулятор', 'Текстовый редактор', 'Игры'], correct: 0 },
+                    { title: 'Пиксель', description: 'Что такое пиксель?', options: ['Точка экрана', 'Файл', 'Цвет', 'Разрешение'], correct: 0 },
+                    { title: 'Браузер', description: 'Что делает браузер?', options: ['Отображает страницы', 'Создаёт сайты', 'Хранит данные', 'Компилирует код'], correct: 0 },
+                    { title: 'IP-адрес', description: 'Что такое IP?', options: ['Адрес устройства', 'Имя сайта', 'Пароль', 'Протокол'], correct: 0 },
+                    { title: 'Цикл for', description: 'Для чего нужен цикл?', options: ['Повторение действий', 'Ветвление', 'Хранение данных', 'Вывод текста'], correct: 0 },
+                    { title: 'Компилятор', description: 'Что делает компилятор?', options: ['Переводит код в машинный', 'Запускает программу', 'Редактирует код', 'Удаляет ошибки'], correct: 0 }
+                ]
+            },
+            {
+                id: 'expert',
+                name: 'Знаток',
+                icon: '🧠',
+                quests: [
+                    { title: 'Стек', description: 'Какой принцип работы стека?', options: ['LIFO', 'FIFO', 'FILO', 'LILO'], correct: 0 },
+                    { title: 'ООП', description: 'Что такое полиморфизм?', options: ['Много форм', 'Наследование', 'Инкапсуляция', 'Абстракция'], correct: 0 },
+                    { title: 'SQL', description: 'Для чего нужен SQL?', options: ['Работа с БД', 'Создание сайтов', 'Рисование', 'Расчёты'], correct: 0 },
+                    { title: 'Регулярные выражения', description: 'Где применяются regex?', options: ['Поиск в тексте', 'Компиляция', 'Сжатие', 'Шифрование'], correct: 0 },
+                    { title: 'REST API', description: 'Что такое REST?', options: ['Архитектура API', 'Язык', 'Протокол', 'Сайт'], correct: 0 },
+                    { title: 'Хеш', description: 'Что такое хеш?', options: ['Уникальный отпечаток', 'Ключ', 'Шифр', 'Алгоритм'], correct: 0 },
+                    { title: 'Многопоточность', description: 'Что делает многопоточность?', options: ['Параллельное выполнение', 'Последовательное', 'Ускорение', 'Замедление'], correct: 0 },
+                    { title: 'Кэш', description: 'Для чего нужен кэш?', options: ['Ускорение доступа', 'Хранение', 'Безопасность', 'Сжатие'], correct: 0 },
+                    { title: 'SQL-инъекция', description: 'Что такое SQL-инъекция?', options: ['Атака на БД', 'Вид программы', 'Метод шифрования', 'Тип данных'], correct: 0 },
+                    { title: 'UX', description: 'Что такое UX?', options: ['Опыт пользователя', 'Интерфейс', 'Дизайн', 'Алгоритм'], correct: 0 }
+                ]
+            },
+            {
+                id: 'master',
+                name: 'Мастер',
+                icon: '⚡',
+                quests: [
+                    { title: 'Бинарное дерево', description: 'Что такое бинарное дерево?', options: ['Структура данных', 'Алгоритм', 'Тип файла', 'Сеть'], correct: 0 },
+                    { title: 'Алгоритм Дейкстры', description: 'Для чего нужен алгоритм Дейкстры?', options: ['Поиск кратчайшего пути', 'Сортировка', 'Шифрование', 'Сжатие'], correct: 0 },
+                    { title: 'Docker', description: 'Что делает Docker?', options: ['Контейнеризация', 'Виртуализация', 'Компиляция', 'Отладка'], correct: 0 },
+                    { title: 'Git', description: 'Для чего нужен Git?', options: ['Контроль версий', 'Создание сайтов', 'Управление БД', 'Дизайн'], correct: 0 },
+                    { title: 'Кэш-память', description: 'Уровни кэша — L1, L2, L3. Что быстрее?', options: ['L1', 'L2', 'L3', 'Одинаково'], correct: 0 },
+                    { title: 'Микросервисы', description: 'Что такое микросервисы?', options: ['Архитектура приложений', 'Тип БД', 'Язык', 'Протокол'], correct: 0 },
+                    { title: 'Блочный шифр', description: 'Что такое блочный шифр?', options: ['Шифрование блоками', 'Поточное', 'Асимметричное', 'Симметричное'], correct: 0 },
+                    { title: 'CDN', description: 'Для чего нужна CDN?', options: ['Ускорение доставки контента', 'Хранение', 'Безопасность', 'Компрессия'], correct: 0 },
+                    { title: 'JWT', description: 'Что такое JWT?', options: ['Токен авторизации', 'Язык', 'Протокол', 'Тип данных'], correct: 0 },
+                    { title: 'Блокчейн', description: 'Что лежит в основе блокчейна?', options: ['Цепочка блоков', 'База данных', 'Ключи', 'Алгоритм'], correct: 0 }
+                ]
+            },
+            {
+                id: 'expert_level',
+                name: 'Эксперт',
+                icon: '🏆',
+                quests: [
+                    { title: 'NP-полная задача', description: 'Что такое NP-полная задача?', options: ['Сложная задача', 'Простая задача', 'Быстрая задача', 'Алгоритм'], correct: 0 },
+                    { title: 'Кубит', description: 'Что такое кубит?', options: ['Квантовый бит', 'Бит', 'Байт', 'Регистр'], correct: 0 },
+                    { title: 'Гомоморфное шифрование', description: 'Что это?', options: ['Шифрование с вычислениями', 'Обычное шифрование', 'Сжатие', 'Хеш'], correct: 0 },
+                    { title: 'ZKP', description: 'Что такое доказательство с нулевым разглашением?', options: ['Доказательство без раскрытия', 'Шифрование', 'Аутентификация', 'Подпись'], correct: 0 },
+                    { title: 'Монада', description: 'Что такое монада в функциональном программировании?', options: ['Структура в FP', 'Тип данных', 'Функция', 'Класс'], correct: 0 },
+                    { title: 'O(n log n)', description: 'Что означает O(n log n)?', options: ['Сложность алгоритма', 'Время работы', 'Память', 'Количество операций'], correct: 0 },
+                    { title: 'Теорема CAP', description: 'Что такое согласованность (CAP)?', options: ['Теорема CAP', 'Тип сети', 'База данных', 'Алгоритм'], correct: 0 },
+                    { title: 'Функция потерь', description: 'Что такое функция потерь в обучении?', options: ['Мера ошибки', 'Активация', 'Слой', 'Оптимизатор'], correct: 0 },
+                    { title: 'Грамматика Хомского', description: 'Что такое грамматика Хомского?', options: ['Иерархия языков', 'Тип алгоритма', 'Структура данных', 'Метод шифрования'], correct: 0 },
+                    { title: 'Равновесие Нэша', description: 'Что такое равновесие Нэша?', options: ['Ситуация в игре', 'Победа', 'Стратегия', 'Платеж'], correct: 0 }
+                ]
+            }
+        ];
+
+        // ----- ЛОГИЧЕСКИЙ КВЕСТ (10 задач) -----
+        const logicQuests = [
+            { title: 'Последовательность чисел', description: 'Какое число должно идти следующим: 2, 6, 12, 20, 30, ?', hint: 'Разность между числами увеличивается на 2.', options: ['38', '40', '42', '44'], correct: 2 },
+            { title: 'Логическая операция', description: '(A И B) ИЛИ (НЕ A И C). A=Истина, B=Ложь, C=Истина. Результат?', hint: 'Подставьте значения.', options: ['Истина', 'Ложь', 'Не определено', 'Ошибка'], correct: 1 },
+            { title: 'Шифр Цезаря', description: 'Слово «КВЕСТ» со сдвигом на 3 буквы вперёд. Какое получится?', hint: 'К→Н, В→Е, Е→З, С→Ф, Т→Х', options: ['НЕЗФХ', 'НЗЕФХ', 'НЕФЗХ', 'НЗФЕХ'], correct: 0 },
+            { title: 'Поиск лишнего', description: 'Какое слово лишнее: Байт, Бит, Гигабайт, Мегабайт, Терабайт?', hint: 'Одно — минимальная единица.', options: ['Байт', 'Бит', 'Гигабайт', 'Мегабайт'], correct: 1 },
+            { title: 'Логическая задача', description: '3 коробки: красная, синяя, зелёная. Только одна надпись правдива. Где приз?', hint: 'Проверьте каждое утверждение.', options: ['Красная', 'Синяя', 'Зелёная', 'Нет решения'], correct: 1 },
+            { title: 'Квадраты чисел', description: 'Продолжите ряд: 1, 4, 9, 16, 25, ?', hint: 'Это квадраты чисел.', options: ['30', '34', '36', '49'], correct: 2 },
+            { title: 'Кванторы', description: 'Могут ли быть одновременно истинны: «Все любят кофе» и «Некоторые не любят»?', hint: 'Вспомните «все» и «некоторые».', options: ['Да', 'Нет', 'Только если нет людей', 'Зависит'], correct: 0 },
+            { title: 'Последовательность букв', description: 'Какая буква следующая: А, Г, Е, Ё, И, ?', hint: 'Порядковые номера: 1,4,6,7,10.', options: ['Й', 'К', 'Л', 'М'], correct: 1 },
+            { title: 'Задача на взвешивание', description: '9 монет, одна фальшивая (легче). За сколько взвешиваний найти?', hint: 'Разделите на 3 группы по 3.', options: ['1', '2', '3', '4'], correct: 1 },
+            { title: 'Дни недели', description: 'Сегодня вторник. Какой день будет через 100 дней?', hint: '100 mod 7 = 2.', options: ['Четверг', 'Пятница', 'Суббота', 'Воскресенье'], correct: 0 }
+        ];
+
+        // ============================================================
+        //  СОСТОЯНИЕ
+        // ============================================================
+        let currentMode = null; // 'levels' | 'logic'
+
+        // Для уровней
+        let levelsLevelIndex = 0;
+        let levelsQuestIndex = 0;
+        let levelsSelected = {};   // { levelId: [answers] }
+        let levelsStatus = {};     // { levelId: [status] }
+
+        // Для логики
+        let logicIndex = 0;
+        let logicSelected = new Array(logicQuests.length).fill(null);
+        let logicStatus = new Array(logicQuests.length).fill(null);
+
+        // ============================================================
+        //  DOM
+        // ============================================================
+        const mainPage = document.getElementById('mainPage');
+        const levelsMode = document.getElementById('levelsMode');
+        const logicMode = document.getElementById('logicMode');
+        const globalBadge = document.getElementById('globalModeBadge');
+
+        // Уровни DOM
+        const lCounter = document.getElementById('levelsCounter');
+        const lScore = document.getElementById('levelsScore');
+        const lLevelName = document.getElementById('levelsLevelName');
+        const lProgress = document.getElementById('levelsProgressFill');
+        const lNumber = document.getElementById('levelsNumber');
+        const lType = document.getElementById('levelsType');
+        const lTitle = document.getElementById('levelsTitle');
+        const lDesc = document.getElementById('levelsDesc');
+        const lOptions = document.getElementById('levelsOptions');
+        const lFeedback = document.getElementById('levelsFeedback');
+        const lPrev = document.getElementById('levelsPrev');
+        const lNext = document.getElementById('levelsNext');
+        const lReset = document.getElementById('levelsReset');
+        const backLevels = document.getElementById('backFromLevels');
+
+        // Логика DOM
+        const logCounter = document.getElementById('logicCounter');
+        const logScore = document.getElementById('logicScore');
+        const logProgress = document.getElementById('logicProgressFill');
+        const logNumber = document.getElementById('logicNumber');
+        const logType = document.getElementById('logicType');
+        const logTitle = document.getElementById('logicTitle');
+        const logDesc = document.getElementById('logicDesc');
+        const logHint = document.getElementById('logicHint');
+        const logOptions = document.getElementById('logicOptions');
+        const logFeedback = document.getElementById('logicFeedback');
+        const logPrev = document.getElementById('logicPrev');
+        const logNext = document.getElementById('logicNext');
+        const logReset = document.getElementById('logicReset');
+        const backLogic = document.getElementById('backFromLogic');
+
+        // ============================================================
+        //  ФУНКЦИИ: УРОВНИ
+        // ============================================================
+        function getLevelQuests() {
+            return levelsData[levelsLevelIndex].quests;
+        }
+
+        function getLevelId() {
+            return levelsData[levelsLevelIndex].id;
+        }
+
+        function initLevelData() {
+            const id = getLevelId();
+            if (!levelsSelected[id]) {
+                const qs = getLevelQuests();
+                levelsSelected[id] = new Array(qs.length).fill(null);
+                levelsStatus[id] = new Array(qs.length).fill(null);
+            }
+        }
+
+        function calcLevelsScore() {
+            const id = getLevelId();
+            const st = levelsStatus[id] || [];
+            let s = 0;
+            for (let i = 0; i < st.length; i++) if (st[i] === 'correct') s++;
+            return s;
+        }
+
+        function renderLevels() {
+            initLevelData();
+            const qs = getLevelQuests();
+            const q = qs[levelsQuestIndex];
+            const id = getLevelId();
+            const sel = levelsSelected[id];
+            const st = levelsStatus[id];
+            const selectedIdx = sel ? sel[levelsQuestIndex] : null;
+            const statusVal = st ? st[levelsQuestIndex] : null;
+
+            const total = qs.length;
+            lCounter.textContent = `${levelsQuestIndex + 1} / ${total}`;
+            lScore.textContent = calcLevelsScore();
+            lLevelName.textContent = levelsData[levelsLevelIndex].name;
+            lProgress.style.width = `${((levelsQuestIndex + 1) / total) * 100}%`;
+
+            lNumber.textContent = `#${levelsQuestIndex + 1}`;
+            lType.innerHTML = `<i class="fas fa-layer-group"></i> Уровень ${levelsLevelIndex + 1}`;
+            lTitle.textContent = q.title;
+            lDesc.textContent = q.description;
+
+            const letters = ['A', 'B', 'C', 'D'];
+            let html = '';
+            q.options.forEach((text, idx) => {
+                let cls = 'option-item mode-levels';
+                if (selectedIdx === idx) {
+                    cls += ' selected';
+                    if (statusVal === 'correct') cls += ' correct';
+                    else if (statusVal === 'wrong') cls += ' wrong';
+                }
+                if (statusVal !== null) cls += ' disabled-opt';
+                html += `<div class="${cls}" data-optindex="${idx}">
+                    <span class="opt-letter blue">${letters[idx]}</span> ${text}
+                </div>`;
+            });
+            lOptions.innerHTML = html;
+
+            lFeedback.className = 'feedback-area';
+            if (statusVal === 'correct') {
+                lFeedback.className = 'feedback-area success';
+                lFeedback.innerHTML = `<i class="fas fa-check-circle"></i> Верно! Отлично!`;
+            } else if (statusVal === 'wrong') {
+                lFeedback.className = 'feedback-area error';
+                lFeedback.innerHTML = `<i class="fas fa-times-circle"></i> Неверно. Правильный ответ: ${q.options[q.correct]}`;
+            } else {
+                lFeedback.innerHTML = selectedIdx !== null ? `<i class="fas fa-question-circle"></i> Подтвердите ответ` : `<i class="fas fa-lightbulb"></i> Выберите вариант`;
+            }
+
+            document.querySelectorAll('#levelsOptions .option-item').forEach(el => {
+                el.addEventListener('click', onLevelsOptionClick);
+            });
+
+            lPrev.disabled = (levelsQuestIndex === 0);
+            if (levelsQuestIndex === total - 1) {
+                lNext.innerHTML = '🏁 Финиш <i class="fas fa-flag-checkered"></i>';
+            } else {
+                lNext.innerHTML = 'Вперёд <i class="fas fa-arrow-right"></i>';
+            }
+        }
+
+        function onLevelsOptionClick(e) {
+            const el = e.currentTarget;
+            if (el.classList.contains('disabled-opt')) return;
+            const optIndex = parseInt(el.dataset.optindex, 10);
+            if (isNaN(optIndex)) return;
+
+            const qs = getLevelQuests();
+            const q = qs[levelsQuestIndex];
+            const id = getLevelId();
+            levelsSelected[id][levelsQuestIndex] = optIndex;
+            levelsStatus[id][levelsQuestIndex] = (optIndex === q.correct) ? 'correct' : 'wrong';
+            renderLevels();
+        }
+
+        function levelsGoTo(index) {
+            const qs = getLevelQuests();
+            if (index < 0 || index >= qs.length) return;
+            levelsQuestIndex = index;
+            renderLevels();
+        }
+
+        function levelsPrev() { if (levelsQuestIndex > 0) levelsGoTo(levelsQuestIndex - 1); }
+
+        function levelsNext() {
+            const qs = getLevelQuests();
+            if (levelsQuestIndex < qs.length - 1) {
+                levelsGoTo(levelsQuestIndex + 1);
+            } else {
+                const id = getLevelId();
+                const allAnswered = levelsSelected[id].every(v => v !== null);
+                if (allAnswered) {
+                    const sc = calcLevelsScore();
+                    lFeedback.className = 'feedback-area success';
+                    lFeedback.innerHTML = `<i class="fas fa-trophy"></i> Уровень пройден! ${sc}/${qs.length}`;
+                } else {
+                    lFeedback.className = 'feedback-area';
+                    lFeedback.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Ответьте на все вопросы!`;
+                }
+            }
+        }
+
+        function levelsReset() {
+            const id = getLevelId();
+            const qs = getLevelQuests();
+            levelsSelected[id] = new Array(qs.length).fill(null);
+            levelsStatus[id] = new Array(qs.length).fill(null);
+            levelsQuestIndex = 0;
+            renderLevels();
+        }
+
+        function switchLevel(newLevelIndex) {
+            levelsLevelIndex = newLevelIndex;
+            levelsQuestIndex = 0;
+            renderLevels();
+        }
+
+        // ============================================================
+        //  ФУНКЦИИ: ЛОГИКА
+        // ============================================================
+        function renderLogic() {
+            const q = logicQuests[logicIndex];
+            const selectedIdx = logicSelected[logicIndex];
+            const statusVal = logicStatus[logicIndex];
+
+            const total = logicQuests.length;
+            logCounter.textContent = `${logicIndex + 1} / ${total}`;
+            let sc = 0;
+            for (let i = 0; i < logicStatus.length; i++) if (logicStatus[i] === 'correct') sc++;
+            logScore.textContent = sc;
+            logProgress.style.width = `${((logicIndex + 1) / total) * 100}%`;
+
+            logNumber.textContent = `#${logicIndex + 1}`;
+            logType.innerHTML = `<i class="fas fa-puzzle-piece"></i> Логика`;
+            logTitle.textContent = q.title;
+            logDesc.textContent = q.description;
+            logHint.querySelector('span').textContent = q.hint;
+
+            const letters = ['A', 'B', 'C', 'D'];
+            let html = '';
+            q.options.forEach((text, idx) => {
+                let cls = 'option-item mode-logic';
+                if (selectedIdx === idx) {
+                    cls += ' selected';
+                    if (statusVal === 'correct') cls += ' correct';
+                    else if (statusVal === 'wrong') cls += ' wrong';
+                }
+                if (statusVal !== null) cls += ' disabled-opt';
+                html += `<div class="${cls}" data-optindex="${idx}">
+                    <span class="opt-letter gold">${letters[idx]}</span> ${text}
+                </div>`;
+            });
+            logOptions.innerHTML = html;
+
+            logFeedback.className = 'feedback-area';
+            if (statusVal === 'correct') {
+                logFeedback.className = 'feedback-area success';
+                logFeedback.innerHTML = `<i class="fas fa-check-circle"></i> Верно! Отличная логика!`;
+            } else if (statusVal === 'wrong') {
+                logFeedback.className = 'feedback-area error';
+                logFeedback.innerHTML = `<i class="fas fa-times-circle"></i> Неверно. Правильный ответ: ${q.options[q.correct]}`;
+            } else {
+                logFeedback.innerHTML = selectedIdx !== null ? `<i class="fas fa-question-circle"></i> Подтвердите ответ` : `<i class="fas fa-lightbulb"></i> Выберите вариант`;
+            }
+
+            document.querySelectorAll('#logicOptions .option-item').forEach(el => {
+                el.addEventListener('click', onLogicOptionClick);
+            });
+
+            logPrev.disabled = (logicIndex === 0);
+            if (logicIndex === total - 1) {
+                logNext.innerHTML = '🏁 Финиш <i class="fas fa-flag-checkered"></i>';
+            } else {
+                logNext.innerHTML = 'Вперёд <i class="fas fa-arrow-right"></i>';
+            }
+        }
+
+        function onLogicOptionClick(e) {
+            const el = e.currentTarget;
+            if (el.classList.contains('disabled-opt')) return;
+            const optIndex = parseInt(el.dataset.optindex, 10);
+            if (isNaN(optIndex)) return;
+
+            const q = logicQuests[logicIndex];
+            logicSelected[logicIndex] = optIndex;
+            logicStatus[logicIndex] = (optIndex === q.correct) ? 'correct' : 'wrong';
+            renderLogic();
+        }
+
+        function logicGoTo(index) {
+            if (index < 0 || index >= logicQuests.length) return;
+            logicIndex = index;
+            renderLogic();
+        }
+
+        function logicPrev() { if (logicIndex > 0) logicGoTo(logicIndex - 1); }
+
+        function logicNext() {
+            if (logicIndex < logicQuests.length - 1) {
+                logicGoTo(logicIndex + 1);
+            } else {
+                const allAnswered = logicSelected.every(v => v !== null);
+                if (allAnswered) {
+                    let sc = 0;
+                    for (let i = 0; i < logicStatus.length; i++) if (logicStatus[i] === 'correct') sc++;
+                    logFeedback.className = 'feedback-area success';
+                    logFeedback.innerHTML = `<i class="fas fa-trophy"></i> Поздравляем! Вы решили все логические задачи! ${sc}/10`;
+                } else {
+                    logFeedback.className = 'feedback-area';
+                    logFeedback.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Остались неотвеченные задачи!`;
+                }
+            }
+        }
+
+        function logicReset() {
+            logicSelected = new Array(logicQuests.length).fill(null);
+            logicStatus = new Array(logicQuests.length).fill(null);
+            logicIndex = 0;
+            renderLogic();
+        }
+
+        // ============================================================
+        //  НАВИГАЦИЯ МЕЖДУ РЕЖИМАМИ
+        // ============================================================
+        function showMain() {
+            currentMode = null;
+            mainPage.style.display = 'block';
+            levelsMode.classList.remove('visible');
+            logicMode.classList.remove('visible');
+            globalBadge.innerHTML = '<i class="fas fa-home"></i> Главная';
+        }
+
+        function showLevels() {
+            currentMode = 'levels';
+            mainPage.style.display = 'none';
+            levelsMode.classList.add('visible');
+            logicMode.classList.remove('visible');
+            globalBadge.innerHTML = '<i class="fas fa-layer-group"></i> Уровни';
+            renderLevels();
+        }
+
+        function showLogic() {
+            currentMode = 'logic';
+            mainPage.style.display = 'none';
+            logicMode.classList.add('visible');
+            levelsMode.classList.remove('visible');
+            globalBadge.innerHTML = '<i class="fas fa-brain"></i> Логика';
+            renderLogic();
+        }
+
+        // ============================================================
+        //  ОБРАБОТЧИКИ
+        // ============================================================
+        // Карточки на главной
+        document.querySelectorAll('.mode-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const mode = card.dataset.mode;
+                if (mode === 'levels') showLevels();
+                else if (mode === 'logic') showLogic();
+            });
+        });
+
+        // Назад
+        backLevels.addEventListener('click', showMain);
+        backLogic.addEventListener('click', showMain);
+
+        // Кнопки уровней
+        lPrev.addEventListener('click', levelsPrev);
+        lNext.addEventListener('click', levelsNext);
+        lReset.addEventListener('click', levelsReset);
+
+        // Кнопки логики
+        logPrev.addEventListener('click', logicPrev);
+        logNext.addEventListener('click', logicNext);
+        logReset.addEventListener('click', logicReset);
+
+        // ============================================================
+        //  СТАРТ
+        // ============================================================
+        showMain();
+    })();
+</script>
+</body>
+</html>
